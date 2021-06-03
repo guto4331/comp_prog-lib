@@ -1,0 +1,4 @@
+//除算切り上げ
+(a + b - 1) / b
+//nCk mod p
+https://drken1215.hatenablog.com/entry/2018/06/08/210000
