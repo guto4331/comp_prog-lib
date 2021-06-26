@@ -63,7 +63,7 @@ namespace geometry2d{
         
         Point& operator -=(const Point& other){
             x -= other.x;
-            y -= other.x;
+            y -= other.y;
             return *this;
         }
         

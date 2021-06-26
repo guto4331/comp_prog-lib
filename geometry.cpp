@@ -22,7 +22,7 @@ namespace geometry2d{
         Point& operator +=(const Point& other){ x += other.x; y += other.x; return *this; }
         Point operator -() const{ return { -x, -y }; }
         Point operator -(const Point& other) const{ return { x - other.x, y - other.y }; }
-        Point& operator -=(const Point& other){ x -= other.x; y -= other.x; return *this; }
+        Point& operator -=(const Point& other){ x -= other.x; y -= other.y; return *this; }
         Point operator *(double k) const{ return { x * k, y * k }; }
         Point& operator *=(double k){ x *= k; y *= k; return *this; }
         Point operator /(double k) const{ return { x / k, y / k }; }
