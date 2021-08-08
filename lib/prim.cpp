@@ -1,4 +1,4 @@
-//最小全域木問題を解く 計算量 O(E log V)
+// 最小全域木問題を解く 計算量 O(E log V)
 
 ll prim(const Graph& g){
     ll ret = 0;

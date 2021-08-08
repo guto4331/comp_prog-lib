@@ -1,4 +1,4 @@
-//エラトステネスの篩 O(nloglogn)
+// エラトステネスの篩 O(nloglogn)
 vector<bool> eratosthenes(int n){
     vector<bool> ret(n, true);
     ret[0] = false;

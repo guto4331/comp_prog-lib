@@ -1,6 +1,6 @@
-//行列の累乗を O(m^2 log n) で、mint で求める
+// 行列の累乗を O(m^2 log n) で、mint で求める
 
-vector<vector<mint>> pow_det(vector<vector<mint>>& base, vector<vector<mint>> a, ll n){
+vector<vector<mint>> pow_det(const vector<vector<mint>>& base, vector<vector<mint>> a, ll n){
     if(n == 1) return a;
     int m = a.size();
     if(n % 2 == 1){
