@@ -16,4 +16,4 @@ ll prim(const Graph& g){
         }
     }
     return ret;
-};
+}
