@@ -150,16 +150,17 @@ namespace geometry2d{
     //ABCの順番で一直線上に並ぶなら +2
     //ACBの順番で一直線上に並ぶなら 0
     //BACの順番で一直線上に並ぶなら -2
-    int iSP(Point a, Point b, Point c){
-        int flag = sgn((b - a).cross(c - a));
-        if(flag == 1) return 1;
-        else if(flag == -1) return -1;
+    int iSP(const Point& a, const Point& b, const Point& c) {
+        if(a == c || b == c) return 0;
+		double crval = (b - a).cross(c - b);
+        if(crval > 0) return 1;
+        else if(crval < 0) return -1;
         else{
-            if(sgn((b - a).dot(c - b)) > 0) return 2;
-            else if(sgn((a - b).dot(c - a)) > 0) return -2;
-            else return 0;
+            if((a - b).dot(c - b) < 0) return 2;
+            else if((a - c).dot(b - c) < 0) return 0;
+            else return -2;
         }
-    }
+	}
         
     //∠ABC が鋭角なら 0 直角なら 1 鈍角なら 2 を返す
     int angleType(Point a, Point b, Point c){
