@@ -40,9 +40,9 @@ namespace geometry2d{
     const Point error_val = {254183.0, -595361.0};
     double dot(Point a, Point b){ return a.x * b.x + a.y * b.y; }
     double cross(Point a, Point b){ return a.x * b.y - a.y * b.x; }
-    int iSP(const Point& a, const Point& b, const Point& c) {
+    int iSP(const Point& a, const Point& b, const Point& c){
         if(a == c || b == c) return 0;
-		double crval = (b - a).cross(c - b);
+	double crval = (b - a).cross(c - b);
         if(crval > 0) return 1;
         else if(crval < 0) return -1;
         else{
@@ -50,7 +50,7 @@ namespace geometry2d{
             else if((a - c).dot(b - c) < 0) return 0;
             else return -2;
         }
-	}
+    }
     int angleType(Point a, Point b, Point c){
         double v = (a - b).dot(c - b);
         if(sgn(v) == 0) return 1;
