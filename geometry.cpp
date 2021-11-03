@@ -4,7 +4,7 @@ namespace geometry2d{
     double dtor(double d){ return d * PI / 180.0; }
     double rtod(double r){ return r * 180.0 / PI; }
     int sgn(const double a){
-        if(a == EPS) return 0;
+        if(abs(a) < EPS) return 0;
         else if(a < -EPS) return -1;
         else return 1;
     }
@@ -37,6 +37,7 @@ namespace geometry2d{
         Point normalUnitVector() const{ return { -normalized().y, normalized().x }; }
         Point rotation(double arg) const{ double cs = cos(arg), sn = sin(arg); return { x * cs - y * sn, x * sn + y * cs }; }
     };
+    ostream& operator<<(ostream& os, const Point& p){ os << p.x << " " << p.y; return os; }
     const Point error_val = {254183.0, -595361.0};
     double dot(Point a, Point b){ return a.x * b.x + a.y * b.y; }
     double cross(Point a, Point b){ return a.x * b.y - a.y * b.x; }
@@ -61,33 +62,59 @@ namespace geometry2d{
         Line(Point from, Point to) : from(from), to(to) {} ;
         Point toVec() const{ return to - from; }
     };
-    typedef Line Ray;
-    typedef Line Segment;
+    struct Ray : Line{
+        Ray(Point a, Point b) : Line(a, b) {}
+    };
+    struct Segment : Line{
+        Segment(Point a, Point b) : Line(a, b) {}
+    };
+    bool isParallel(Line a, Line b){ return sgn(a.toVec().cross(b.toVec())) == 0; }
+    bool isOrthogonal(Line a, Line b){ return sgn(a.toVec().dot(b.toVec())) == 0; }
     pair<bool, Point> lineIntersection(Line a, Line b){
-        if(sgn(a.toVec().cross(b.toVec())) == 0) return { false, error_val };
-        Point ret = a.from + b.toVec() * abs((b.to - a.from).cross(b.toVec()) / a.toVec().cross(b.toVec()));
+        if(isParallel(a, b)) return { false, error_val };
+        Point ret = b.from + b.toVec() * (a.toVec().cross(a.to - b.from) / a.toVec().cross(b.toVec()));
         return { true, ret };
     }
     pair<bool, Point> segmentIntersection(Segment a, Segment b){
         if(iSP(a.from, a.to, b.from) * iSP(a.from, a.to, b.to) <= 0 && iSP(b.from, b.to, a.from) * iSP(b.from, b.to, a.to) <= 0){
-            if(a.toVec().cross(b.toVec()) == 0) return { true, error_val };
+            if(isParallel(a, b)) return { true, error_val };
             else return lineIntersection(a, b);
         }else return { false, error_val };
-    }
-    double dist(Point from, Point to){ double dx = to.x - from.x; double dy = to.y - from.y; return sqrt(dx * dx + dy * dy); }
-    double distBetweenPointAndLine(Point p, Line l){ return abs(l.toVec().cross(p - l.from) / l.toVec().length()); }
-    double distBetweenPointAndRay(Point p, Ray r){
-        if(sgn((p - r.from).dot(r.toVec())) < 0) return r.from.dist(p);
-        else return abs(r.toVec().cross(p - r.from) / r.toVec().length());
-    }
-    double distBetweenPointAndSegment(Point p, Segment s){
-        if(sgn(s.toVec().dot(p - s.from)) < 0 || sgn((-s.toVec()).dot(p - s.to)) < 0) return min(p.dist(s.from), p.dist(s.to));
-        else return distBetweenPointAndLine(p, s);
     }
     Point projection(Point a, Line l){
         Point ret = l.from + l.toVec().normalized() * (a - l.from).dot(l.toVec()) / l.toVec().length();
         return ret;
     }
     Point reflection(Point a, Line l){ Point ret = a + (projection(a, l) - a) * 2; return ret; }
+    double dist(Point from, Point to){ return sqrt(pow(to.x - from.x, 2) + pow(to.y - from.y, 2)); }
+    double dist(Point p, Line l){ return dist(p, projection(p, l)); }
+    double dist(Point p, Ray r){
+        if(sgn(r.toVec().dot(p - r.from)) < 0) return dist(p, r.from);
+        return dist(p, Line(r));
+    }
+    double dist(Point p, Segment s){
+        if(sgn(s.toVec().dot(p - s.from)) < 0 || sgn((-s.toVec()).dot(p - s.to)) < 0) return min(dist(p, s.from), dist(p, s.to));
+        return dist(p, Line(s));
+    }
+    double polygonArea(const vector<Point> &v){
+        int n = v.size();
+        double ret = 0;
+        rep(i, 0, n){
+            int s = i, t = (i + 1) % n;
+            ret += cross(v[s], v[t]);
+        }
+        ret /= 2.0;
+        return ret;
+    }
+    bool isConvex(const vector<Point> &v){
+        int n = v.size();
+        rep(i, 0, n){
+            int a = i, b = (i + 1) % n, c = (i + 2) % n;
+            if(iSP(v[a], v[b], v[c]) == -1){
+                return false;
+            }
+        }
+        return true;
+    }
 }
 using namespace geometry2d;
