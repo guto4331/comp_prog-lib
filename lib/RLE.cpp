@@ -12,13 +12,13 @@ vector<pair<char, int>> encode(const string& str){
 }
 
 // vectorバージョン
-vector<pair<int, int>> encode(const vector<int>& v){
+template<class T> vector<pair<T, int>> encode(const vector<T>& v){
     int n = v.size();
-    vector<pair<int, int>> ret;
+    vector<pair<T, int>> ret;
     for (int l = 0; l < n;){
         int r = l + 1;
         while(r < n && v[l] == v[r]) r++;
-        ret.emplace_back(pair<int, int>(v[l], r - l));
+        ret.emplace_back(v[l], r - l);
         l = r;
     }
     return ret;
