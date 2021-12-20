@@ -1,4 +1,5 @@
 // 座標圧縮 O(n log n)
+
 template<class T> vector<T> compress(const vector<T>& a){
     int n = a.size();
     vector<T> b = a;
